@@ -6,6 +6,7 @@ import os
 from PIL import Image
 import google.generativeai as genai
 import prompts
+import webbrowser
 import requests
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -13,8 +14,8 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # load gemini pro vision model
 model = genai.GenerativeModel('gemini-pro-vision')
 
-def get_gemini_response(input, image, user_prompt):
-    response = model.generate_content([input, image, user_prompt])
+def get_gemini_response(input, image, prompt):
+    response = model.generate_content([input, image, prompt])
     return response.text
 
 def get_image_data(uploaded_file):
@@ -32,10 +33,7 @@ def get_image_data(uploaded_file):
     
 def generate_invoice(header, items, total_amount):
     
-    res = requests.post("http://127.0.0.1:5000/test", data={"header": header, "items": items, "total_amount": total_amount})
-    
-    if(res.status_code != 200):
-        return "Error Generating Invoice"
+    res = requests.post("https://invoice-generator-api-jklu.onrender.com/test", data={"header": header, "items": items, "total_amount": total_amount})
     
     return res.content.decode("utf-8")
 
@@ -73,9 +71,11 @@ if __name__ == "__main__":
                 link = generate_invoice(header, items, total_amount)
                 if(link!=None):    
                     st.write("Invoice generated, you can download it by clicking below button")
-                    st.link_button("download invoice", url=link)
+                    st.markdown(f'''<a href="{link}"><button style="background-color:Green;">Download</button></a>''',
+                    unsafe_allow_html=True)
             except:
                 st.error("Error Generating Invoice")
             
         else:
             st.write("please upload an image of invoice")
+
