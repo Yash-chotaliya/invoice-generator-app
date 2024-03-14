@@ -54,12 +54,15 @@ if __name__ == "__main__":
         st.image(image, caption='Uploaded Image', use_column_width=True)
         
     submit = st.button("submit")
-        
+            
     if submit:
         if uploaded_file is not None:
-            
+                        
             link = ""
+            x = st.progress(10, "waiting...")
+            download_widget = st.empty()
             
+
             image_data=get_image_data(uploaded_file)
             
             input_prompt = """
@@ -70,14 +73,17 @@ if __name__ == "__main__":
             
             try:
                 header = get_gemini_response(input_prompt, image_data[0], prompts.header_prompt)[10:-4].strip()
+                x.progress(20, "waiting...")
                 items = get_gemini_response(input_prompt, image_data[0], prompts.items_prompt).strip()
+                x.progress(30, "waiting...")
                 total_amount = get_gemini_response(input_prompt, image_data[0], prompts.total_amount_prompt).strip()
+                x.progress(60, "waiting...")
                 
                 link = asyncio.run(generate_invoice(header, items, total_amount))
                 
                 if(link!=""):    
-                    st.write("Invoice generated, you can download it by clicking below button")
-                    st.markdown(f'''<a href="{link}"><button style="background-color:Green;">Download</button></a>''',
+                    x.success("Invoice generated, you can download it by clicking below button")
+                    download_widget.markdown(f'''<a href="{link}"><button style="background-color:Green;">Download</button></a>''',
                     unsafe_allow_html=True)
                 else:
                     st.error("Error Generating Invoice")
