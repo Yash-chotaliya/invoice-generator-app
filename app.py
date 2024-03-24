@@ -87,12 +87,12 @@ if __name__ == "__main__":
                     unsafe_allow_html=True)
                     
                 elif link == "Format Error":
-                    st.error(link)
+                    x.error(link)
                     
                 else:
-                    st.error("Error Generating Invoice")
+                    x.error("Error Generating Invoice")
             except:
-                st.error("Error Generating Invoice")
+                x.error("Error Generating Invoice")
             
         else:
             st.error("please upload an image of invoice")
