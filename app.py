@@ -81,10 +81,14 @@ if __name__ == "__main__":
                 
                 link = asyncio.run(generate_invoice(header, items, total_amount))
                 
-                if(link!=""):    
+                if(link!="" & link!="Format Error"):    
                     x.success("Invoice generated, you can download it by clicking below button")
                     download_widget.markdown(f'''<a href="{link}"><button style="background-color:Green;">Download</button></a>''',
                     unsafe_allow_html=True)
+                    
+                elif link == "Format Error":
+                    st.error(link)
+                    
                 else:
                     st.error("Error Generating Invoice")
             except:
