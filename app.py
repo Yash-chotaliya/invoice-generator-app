@@ -90,9 +90,9 @@ if __name__ == "__main__":
                     x.error(link)
                     
                 else:
-                    x.error("Error Generating Invoice")
+                    x.error("Error Generating Invoice, make sure that you have submitted clear image")
             except:
-                x.error("Error Generating Invoice")
+                x.error("Error Generating Invoice, make sure that you have submitted clear image")
             
         else:
             st.error("please upload an image of invoice")
